@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">goozcena-gnl platform engineering portfolio</title>
+  <desc id="desc">A restrained cloud-native banner with connected infrastructure nodes and a terminal prompt.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071827"/>
+      <stop offset="0.52" stop-color="#0b2c46"/>
+      <stop offset="1" stop-color="#0d4660"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#7dd3fc" stroke-opacity=".08" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="300" rx="18" fill="url(#background)"/>
+  <rect width="1200" height="300" rx="18" fill="url(#grid)"/>
+  <path d="M0 252C210 210 370 286 590 240S956 180 1200 230V300H0Z" fill="#38bdf8" opacity=".05"/>
+
+  <g fill="none" stroke="#38bdf8" stroke-opacity=".34" stroke-width="2">
+    <path d="M830 74L935 120 1036 76 1110 148 1010 220 900 194 800 232"/>
+    <path d="M935 120L900 194M1036 76L1010 220M830 74L800 232M1110 148L900 194"/>
+  </g>
+  <g fill="#0b2c46" stroke="#67e8f9" stroke-width="2">
+    <circle cx="830" cy="74" r="9"/><circle cx="935" cy="120" r="12"/>
+    <circle cx="1036" cy="76" r="9"/><circle cx="1110" cy="148" r="12"/>
+    <circle cx="1010" cy="220" r="10"/><circle cx="900" cy="194" r="9"/>
+    <circle cx="800" cy="232" r="11"/>
+  </g>
+  <circle cx="935" cy="120" r="4" fill="#22d3ee" filter="url(#glow)"/>
+  <circle cx="1110" cy="148" r="4" fill="#22d3ee" filter="url(#glow)"/>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text x="72" y="92" fill="#7dd3fc" font-size="20" letter-spacing="2">$ WHOAMI</text>
+    <text x="72" y="151" fill="#f8fafc" font-size="44" font-weight="700">goozcena-gnl</text>
+    <rect x="72" y="174" width="620" height="3" rx="1.5" fill="url(#accent)"/>
+    <text x="72" y="217" fill="#dbeafe" font-size="23">platforms · cloud · kubernetes · gitops</text>
+    <text x="72" y="252" fill="#a5f3fc" font-size="18">reproducible infrastructure. explicit evidence.</text>
+  </g>
+</svg>
