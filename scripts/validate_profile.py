@@ -15,6 +15,13 @@ ROOT = Path(__file__).resolve().parents[1]
 README = ROOT / "README.md"
 MARKDOWN_LINK = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)")
 FENCE_OPEN = re.compile(r"^[ \t]{0,3}(`{3,}|~{3,})")
+HTML_COMMENT = re.compile(r"<!--.*?(?:-->|$)", re.DOTALL)
+INLINE_CODE = re.compile(r"(`+)(.*?)\1")
+REFERENCE_USE = re.compile(r"!?\[[^\]]*\]\[([^\]]+)\]")
+REFERENCE_DEFINITION = re.compile(
+    r"^[ \t]{0,3}\[([^\]]+)\]:[ \t]*(?:<([^>]+)>|(\S+))",
+    re.MULTILINE,
+)
 
 
 class ReferenceHTMLParser(HTMLParser):
@@ -70,6 +77,49 @@ def strip_fenced_code(text: str) -> tuple[str, bool]:
     return "".join(outside), not fence_character
 
 
+def blank_region(match: re.Match[str]) -> str:
+    """Blank ignored content while retaining its line structure."""
+
+    return "".join("\n" if character == "\n" else " " for character in match.group())
+
+
+def strip_indented_code(text: str) -> str:
+    """Remove four-space code blocks without hiding nested HTML attributes."""
+
+    outside: list[str] = []
+    in_code_block = False
+    previous_line_blank = True
+
+    for line in text.splitlines(keepends=True):
+        indented = line.startswith("    ") or line.startswith("\t")
+        if indented and (in_code_block or previous_line_blank):
+            in_code_block = True
+            outside.append("\n" if line.endswith(("\n", "\r")) else "")
+            previous_line_blank = False
+            continue
+
+        if in_code_block and not line.strip():
+            outside.append(line)
+            previous_line_blank = True
+            continue
+
+        in_code_block = False
+        outside.append(line)
+        previous_line_blank = not line.strip()
+
+    return "".join(outside)
+
+
+def rendered_regions(text: str) -> tuple[str, bool]:
+    """Remove the limited set of Markdown regions that do not render links."""
+
+    text, fences_closed = strip_fenced_code(text)
+    text = HTML_COMMENT.sub(blank_region, text)
+    text = strip_indented_code(text)
+    text = INLINE_CODE.sub(blank_region, text)
+    return text, fences_closed
+
+
 def srcset_urls(value: str) -> list[str]:
     """Return the URL portion of each normal srcset candidate."""
 
@@ -80,12 +130,32 @@ def srcset_urls(value: str) -> list[str]:
     ]
 
 
-def references_in(text: str) -> list[str]:
+def normalize_reference_label(label: str) -> str:
+    return " ".join(label.split()).casefold()
+
+
+def references_in(text: str) -> tuple[list[str], list[str]]:
     references = MARKDOWN_LINK.findall(text)
     parser = ReferenceHTMLParser()
     parser.feed(text)
     parser.close()
-    return references + parser.references
+
+    definitions: dict[str, str] = {}
+    for match in REFERENCE_DEFINITION.finditer(text):
+        label, angle_target, plain_target = match.groups()
+        definitions.setdefault(
+            normalize_reference_label(label), angle_target or plain_target
+        )
+
+    missing_definitions: list[str] = []
+    for label in REFERENCE_USE.findall(text):
+        normalized_label = normalize_reference_label(label)
+        if normalized_label in definitions:
+            references.append(definitions[normalized_label])
+        else:
+            missing_definitions.append(label)
+
+    return references + parser.references, missing_definitions
 
 
 def local_target(reference: str, repo_root: Path, readme: Path) -> Path | None:
@@ -114,11 +184,13 @@ def validate(repo_root: Path, readme: Path) -> tuple[list[str], int, int]:
     else:
         text = readme.read_text(encoding="utf-8")
 
-    rendered_text, fences_closed = strip_fenced_code(text)
+    rendered_text, fences_closed = rendered_regions(text)
     if not fences_closed:
         errors.append("README.md contains an unclosed fenced code block")
 
-    references = references_in(rendered_text)
+    references, missing_definitions = references_in(rendered_text)
+    for label in sorted(set(missing_definitions)):
+        errors.append(f"missing reference definition: {label}")
     for reference in sorted(set(references)):
         try:
             target = local_target(reference, repo_root, readme)

@@ -41,6 +41,27 @@ class ValidateProfileTests(unittest.TestCase):
         self.assertIn("README.md contains an unclosed fenced code block", errors)
         self.assertNotIn("missing local reference: missing.svg", errors)
 
+    def test_reference_inside_html_comment_is_ignored(self) -> None:
+        errors = self.errors_for("<!-- [example](missing.svg) -->\n")
+        self.assertEqual([], errors)
+
+    def test_reference_inside_inline_code_is_ignored(self) -> None:
+        errors = self.errors_for("`[example](missing.svg)`\n")
+        self.assertEqual([], errors)
+
+    def test_reference_inside_indented_code_is_ignored(self) -> None:
+        errors = self.errors_for("    [example](missing.svg)\n")
+        self.assertEqual([], errors)
+
+    def test_real_html_attributes_outside_ignored_regions_are_validated(self) -> None:
+        errors = self.errors_for(
+            '<a href="missing.html"><img src="missing.svg" '
+            'srcset="missing-dark.svg 2x" /></a>\n'
+        )
+        self.assertIn("missing local reference: missing.html", errors)
+        self.assertIn("missing local reference: missing.svg", errors)
+        self.assertIn("missing local reference: missing-dark.svg", errors)
+
     def test_valid_local_srcset_passes(self) -> None:
         self.write_svg("example.svg")
         errors = self.errors_for('<source srcset="./assets/example.svg" />\n')
@@ -70,6 +91,47 @@ class ValidateProfileTests(unittest.TestCase):
         self.assertIn(
             "local reference escapes the repository: ../outside.svg", errors
         )
+
+    def test_valid_reference_style_local_link_passes(self) -> None:
+        self.write_svg("header.svg")
+        errors = self.errors_for(
+            "[diagram][header]\n\n[header]: ./assets/header.svg\n"
+        )
+        self.assertEqual([], errors)
+
+    def test_missing_reference_style_local_target_fails(self) -> None:
+        errors = self.errors_for(
+            "[diagram][header]\n\n[header]: ./assets/missing.svg\n"
+        )
+        self.assertIn("missing local reference: ./assets/missing.svg", errors)
+
+    def test_external_reference_style_target_is_ignored(self) -> None:
+        errors = self.errors_for(
+            "[documentation][docs]\n\n[docs]: https://example.com/docs\n"
+        )
+        self.assertEqual([], errors)
+
+    def test_reference_style_image_is_validated(self) -> None:
+        errors = self.errors_for(
+            "![Architecture][architecture]\n\n"
+            "[architecture]: ./assets/missing-architecture.svg\n"
+        )
+        self.assertIn(
+            "missing local reference: ./assets/missing-architecture.svg", errors
+        )
+
+    def test_unused_reference_definition_is_not_validated(self) -> None:
+        errors = self.errors_for("[unused]: ./assets/missing.svg\n")
+        self.assertEqual([], errors)
+
+    def test_reference_style_syntax_in_ignored_regions_is_ignored(self) -> None:
+        errors = self.errors_for(
+            "<!-- [comment][missing]\n[missing]: missing-comment.svg -->\n"
+            "`[inline][missing]`\n\n"
+            "    [indented][missing]\n\n"
+            "```markdown\n[fenced][missing]\n```\n"
+        )
+        self.assertEqual([], errors)
 
 
 if __name__ == "__main__":
