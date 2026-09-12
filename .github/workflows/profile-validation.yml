@@ -1,0 +1,34 @@
+name: Validate profile repository
+
+on:
+  pull_request:
+    paths:
+      - README.md
+      - .github/workflows/**
+      - assets/**
+      - scripts/validate_profile.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: profile-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Validate GitHub Actions workflows
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 -color
+
+      - name: Validate README references and SVG files
+        run: python scripts/validate_profile.py
