@@ -28,6 +28,15 @@ I build evidence-backed infrastructure and platform projects around Kubernetes, 
 | **04 · [FluxVirt Lab](https://github.com/goozcena-gnl/fluxvirt-lab)** | **Problem:** reconcile virtual machines and containers through one GitOps control plane.<br>**Stack:** K3s · Flux CD · KubeVirt · CDI · Kustomize · Trivy.<br>**Proof:** [dated reconciliation record](https://github.com/goozcena-gnl/fluxvirt-lab/blob/main/VALIDATION.md), [v0.1.0 release](https://github.com/goozcena-gnl/fluxvirt-lab/releases/tag/v0.1.0), and [bounded recovery record](https://github.com/goozcena-gnl/fluxvirt-lab/blob/main/docs/BACKUP-RESTORE.md). |
 | **05 · [Flask Kubernetes GitOps Lab](https://github.com/goozcena-gnl/flask-kubernetes-gitops-lab)** | **Problem:** separate artifact production from cluster reconciliation in a hardened delivery path.<br>**Stack:** Flask · GitLab CI · Buildah · Kubernetes · Kustomize · Argo CD · Traefik.<br>**Proof:** [Minikube and Argo CD E2E record](https://github.com/goozcena-gnl/flask-kubernetes-gitops-lab/blob/main/docs/minikube-argocd-e2e.md) and [validation report](https://github.com/goozcena-gnl/flask-kubernetes-gitops-lab/blob/main/docs/validation-report.md). |
 
+## Open-source & engineering resources
+
+### [DevOps Tools Catalog](https://github.com/goozcena-gnl/devops-tools-catalog)
+
+Evidence-backed, machine-validated knowledge base covering 1,400+ DevOps,
+Cloud, Platform Engineering, SRE, and DevSecOps tools. Canonical YAML, schemas,
+generated documentation, and automated checks preserve lifecycle, licence,
+provenance, and review metadata for reproducible catalogue maintenance.
+
 <!-- ENGINEERING JOURNEY -->
 ## Engineering journey
 
