@@ -1,2 +1,11 @@
 extends: plumber:default
 version: "2.0"
+
+github:
+  controls:
+    githubActionMustComeFromAuthorizedSources:
+      enabled: true
+      includePlumberDefaults: true
+      trustedGithubActions:
+        - Platane/snk
+        - peaceiris/actions-gh-pages
