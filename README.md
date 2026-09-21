@@ -10,7 +10,7 @@
 <!-- ABOUT -->
 ## Engineering platforms from foundations to delivery
 
-I build evidence-backed infrastructure and platform projects around Kubernetes, GitOps, Terraform, Azure, developer experience, and operational automation. The work is designed to be reproducible: each repository records its architecture, trade-offs, validation method, and the boundary between implemented design and runtime evidence.
+I build evidence-backed infrastructure and platform projects around Kubernetes, GitOps, Terraform, Azure, developer experience, and operational automation. The work is designed to be reproducible: each repository records its architecture, trade-offs, validation method, and the boundary between implemented design and runtime evidence. This profile highlights only repositories with concrete documentation and retained proof.
 
 <!-- CORE DOMAINS -->
 ### Core engineering domains
@@ -27,6 +27,12 @@ I build evidence-backed infrastructure and platform projects around Kubernetes, 
 | **03 · [DevOps Automation Toolkit](https://github.com/goozcena-gnl/devops-automation-toolkit)** | **Problem:** turn platform and cloud evidence into safe, deterministic operational reports.<br>**Stack:** Python · Kubernetes · Terraform/OpenTofu · SARIF · JSON Schema · Bash/PowerShell.<br>**Proof:** [20-tool traceability matrix](https://github.com/goozcena-gnl/devops-automation-toolkit/blob/main/docs/validation-matrix.md) and [v1.0.1 release](https://github.com/goozcena-gnl/devops-automation-toolkit/releases/tag/v1.0.1). |
 | **04 · [FluxVirt Lab](https://github.com/goozcena-gnl/fluxvirt-lab)** | **Problem:** reconcile virtual machines and containers through one GitOps control plane.<br>**Stack:** K3s · Flux CD · KubeVirt · CDI · Kustomize · Trivy.<br>**Proof:** [dated reconciliation record](https://github.com/goozcena-gnl/fluxvirt-lab/blob/main/VALIDATION.md), [v0.1.0 release](https://github.com/goozcena-gnl/fluxvirt-lab/releases/tag/v0.1.0), and [bounded recovery record](https://github.com/goozcena-gnl/fluxvirt-lab/blob/main/docs/BACKUP-RESTORE.md). |
 | **05 · [Flask Kubernetes GitOps Lab](https://github.com/goozcena-gnl/flask-kubernetes-gitops-lab)** | **Problem:** separate artifact production from cluster reconciliation in a hardened delivery path.<br>**Stack:** Flask · GitLab CI · Buildah · Kubernetes · Kustomize · Argo CD · Traefik.<br>**Proof:** [Minikube and Argo CD E2E record](https://github.com/goozcena-gnl/flask-kubernetes-gitops-lab/blob/main/docs/minikube-argocd-e2e.md) and [validation report](https://github.com/goozcena-gnl/flask-kubernetes-gitops-lab/blob/main/docs/validation-report.md). |
+
+### Portfolio taxonomy
+
+- **Featured engineering projects:** the repositories above, selected because they document the engineering problem, implementation scope, and retained validation evidence.
+- **Labs / experiments:** bounded repositories used to explore an architecture, delivery pattern, or operational workflow without overstating production reach.
+- **Learning / upstream forks:** repositories kept for study, comparison, or contribution flow; they are not treated here as portfolio proof unless they add original, evidenced engineering work.
 
 ## Open-source & engineering resources
 
@@ -45,7 +51,7 @@ Design the platform → Govern the cloud foundation → Automate operations
         → Explore infrastructure boundaries → Deliver workloads safely
 ```
 
-> **Evidence boundary:** These are scoped engineering projects, not claims of production adoption. Their documentation distinguishes implemented design, static validation, retained lab or runtime evidence, and paths that were not exercised against live target environments.
+> **Evidence boundary:** These are scoped engineering projects, not claims of production adoption. Their documentation keeps **design**, **static validation**, **runtime or retained lab evidence**, and **NOT RUN** paths explicit and separate.
 
 <!-- ACTIVITY -->
 ## Engineering activity
